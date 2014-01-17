@@ -71,7 +71,7 @@ define sensu::handler(
   if $exchange { validate_hash($exchange) }
   if $socket { validate_hash($socket) }
   validate_array($severities)
-  if $source { validate_re($source, ['^puppet://'] ) }
+  #  if $source { validate_re($source, ['^puppet://'] ) }
 
   if $type == 'pipe' and $ensure != 'absent' and !$command and !$source and !$mutator {
     fail('command must be set with type pipe')

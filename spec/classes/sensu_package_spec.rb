@@ -32,7 +32,7 @@ describe 'sensu' do
     context 'repos' do
 
       context 'ubuntu' do
-        let(:facts) { { :operatingsystem => 'Ubuntu' } }
+        let(:facts) { { :osfamily => 'Debian' } }
 
         context 'with puppet-apt installed' do
           let(:pre_condition) { [ 'define apt::source ($ensure, $location, $release, $repos, $include_src) {}', 'define apt::key ($key, $key_source) {}' ] }
@@ -61,13 +61,18 @@ describe 'sensu' do
           context 'override repo url' do
             let(:params) { { :repo_source => 'http://repo.mydomain.com/apt' } }
             it { should contain_apt__source('sensu').with( :location => 'http://repo.mydomain.com/apt') }
+
+            it { should contain_apt__key('sensu').with(
+              :key         => '7580C77F',
+              :key_source  => 'http://repo.mydomain.com/apt/pubkey.gpg'
+            ) }
           end
 
           context 'install_repo => false' do
             let(:params) { { :install_repo => false, :repo => 'main' } }
             it { should contain_apt__source('sensu').with_ensure('absent') }
 
-            it { should contain_apt__key('sensu').with(
+            it { should_not contain_apt__key('sensu').with(
               :key         => '7580C77F',
               :key_source  => 'http://repos.sensuapp.org/apt/pubkey.gpg'
             ) }
@@ -80,7 +85,7 @@ describe 'sensu' do
       end
 
       context 'redhat' do
-        let(:facts) { { :operatingsystem => 'RedHat' } }
+        let(:facts) { { :osfamily => 'RedHat' } }
 
         context 'default' do
           it { should contain_yumrepo('sensu').with(

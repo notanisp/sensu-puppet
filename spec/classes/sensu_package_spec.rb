@@ -62,7 +62,7 @@ describe 'sensu' do
             let(:params) { { :repo_source => 'http://repo.mydomain.com/apt' } }
             it { should contain_apt__source('sensu').with( :location => 'http://repo.mydomain.com/apt') }
 
-            it { should contain_apt__key('sensu').with(
+            it { should_not contain_apt__key('sensu').with(
               :key         => '7580C77F',
               :key_source  => 'http://repo.mydomain.com/apt/pubkey.gpg'
             ) }
